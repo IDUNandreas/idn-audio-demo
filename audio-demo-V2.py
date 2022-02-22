@@ -11,7 +11,15 @@ FADE_STEPS = 5      #fade steps
 
 # fade from current volume to target volume, given as tuple [left, right]
 def fade(sounds, current, target):
-    
+    '''
+    Fading between different audio levels
+    input:
+        sounds: soundfiles
+        current: current volume as tuple [left, right]
+        target: target volume as [left, right]
+    output:
+        new volume level as tuple [left, right]
+    '''
     print(f"fading from {current} to {target}")
 
     #calculate discrete volumesteps
@@ -32,7 +40,12 @@ def fade(sounds, current, target):
 
 # load sounds
 def loadsounds():
-
+    '''
+    Loading sounds from files
+    input:
+    output:
+        dictionary with loaded sounds. Keys are 'left', 'middle', 'right'
+    '''
     left_sound = mixer.Sound(LEFT_FILE)
     middle_sound = mixer.Sound(MIDDLE_FILE)
     right_sound = mixer.Sound(RIGHT_FILE)
@@ -40,8 +53,13 @@ def loadsounds():
     return {'left': left_sound, 'middle': middle_sound, 'right': right_sound}
 
 
-def main():
-    
+def audio_demo():
+    '''
+    Adjusting audio levels according to eye position
+    input:
+        output of the heog classifier. Keywords are 'Left', 'Center', 'Right'
+    output:
+    '''
     #init and load sounds
     mixer.init(frequency=48000, size=-16, channels=3)
     volume = [1,1]
@@ -54,19 +72,19 @@ def main():
     # change channel volume according to user input
     while volume != [0,0]:
 
-        output = input("channel: \n")
+        eye_position = input("channel: \n")
 
-        if output == 'stop':
+        if eye_position == 'stop':
             mixer.fadeout(2000)
             volume = [0,0]
         
-        elif output == 'Left':
+        elif eye_position == 'Left':
             volume = fade(sounds=sounds, current=volume, target=[1, 0.2])
 
-        elif output == 'Right':
+        elif eye_position == 'Right':
             volume = fade(sounds=sounds, current=volume, target=[0.2, 1])
         
-        elif output == 'Center':
+        elif eye_position == 'Center':
             volume = fade(sounds=sounds, current=volume, target=[1, 1])
 
         else:
@@ -74,4 +92,4 @@ def main():
 
         time.sleep(1)
 
-main()
+audio_demo()
